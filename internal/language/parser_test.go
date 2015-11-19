@@ -7,15 +7,20 @@ import (
 )
 
 func TestParse_AcceptsOptionToNotIncludeSource(T *testing.T) {
-	deepEqual(T, Parse(NewSource(`{ field }`, ""), ParseOptions{
-		NoSource: false,
-	}), &Document{
+	tree, err := Parse(NewSource(`{ field }`, ""),
+		ParseOptions{NoSource: false})
+	if err != nil {
+		T.Error(err)
+		return
+	}
+
+	deepEqual(T, tree, &Document{
 		Location: &Location{
 			Start: 0,
 			End:   9,
 		},
-		Definitions: []Definition{
-			OperationDefinition{
+		Definitions: []IDefinition{
+			&OperationDefinition{
 				Location: &Location{
 					Start: 0,
 					End:   9,
@@ -23,28 +28,28 @@ func TestParse_AcceptsOptionToNotIncludeSource(T *testing.T) {
 				Operation:           OperationQuery,
 				Name:                nil,
 				VariableDefinitions: nil,
-				Directives:          []Directive{},
-				SelectionSet: SelectionSet{
+				Directives:          nil,
+				SelectionSet: &SelectionSet{
 					Location: &Location{
 						Start: 0,
 						End:   9,
 					},
-					Selections: []Selection{
-						Field{
+					Selections: []ISelection{
+						&Field{
 							Location: &Location{
 								Start: 2,
 								End:   7,
 							},
 							Alias: nil,
-							Name: Name{
+							Name: &Name{
 								Location: &Location{
 									Start: 2,
 									End:   7,
 								},
 								Value: "field",
 							},
-							Arguments:    []Argument{},
-							Directives:   []Directive{},
+							Arguments:    nil,
+							Directives:   nil,
 							SelectionSet: nil,
 						},
 					},
@@ -214,14 +219,20 @@ func TestParse_ParseCreatesAst(T *testing.T) {
   }
 }
 `, "")
-	deepEqual(T, Parse(source, ParseOptions{}), &Document{
+	tree, err := Parse(source, ParseOptions{})
+	if err != nil {
+		T.Error(err)
+		return
+	}
+
+	deepEqual(T, tree, &Document{
 		Location: &Location{
 			Start:  0,
 			End:    41,
 			Source: &source,
 		},
-		Definitions: []Definition{
-			OperationDefinition{
+		Definitions: []IDefinition{
+			&OperationDefinition{
 				Location: &Location{
 					Start:  0,
 					End:    40,
@@ -231,22 +242,22 @@ func TestParse_ParseCreatesAst(T *testing.T) {
 				Operation:           OperationQuery,
 				Name:                nil,
 				VariableDefinitions: nil,
-				Directives:          []Directive{},
-				SelectionSet: SelectionSet{
+				Directives:          nil,
+				SelectionSet: &SelectionSet{
 					Location: &Location{
 						Start:  0,
 						End:    40,
 						Source: &source,
 					},
-					Selections: []Selection{
-						Field{
+					Selections: []ISelection{
+						&Field{
 							Location: &Location{
 								Start:  4,
 								End:    38,
 								Source: &source,
 							},
 							Alias: nil,
-							Name: Name{
+							Name: &Name{
 								Location: &Location{
 									Start:  4,
 									End:    8,
@@ -254,9 +265,9 @@ func TestParse_ParseCreatesAst(T *testing.T) {
 								},
 								Value: "node",
 							},
-							Arguments: []Argument{
-								Argument{
-									Name: Name{
+							Arguments: []*Argument{
+								&Argument{
+									Name: &Name{
 										Location: &Location{
 											Start:  9,
 											End:    11,
@@ -264,7 +275,7 @@ func TestParse_ParseCreatesAst(T *testing.T) {
 										},
 										Value: "id",
 									},
-									Value: IntValue{
+									Value: &IntValue{
 										Location: &Location{
 											Start:  13,
 											End:    14,
@@ -279,22 +290,22 @@ func TestParse_ParseCreatesAst(T *testing.T) {
 									},
 								},
 							},
-							Directives: []Directive{},
+							Directives: nil,
 							SelectionSet: &SelectionSet{
 								Location: &Location{
 									Start:  16,
 									End:    38,
 									Source: &source,
 								},
-								Selections: []Selection{
-									Field{
+								Selections: []ISelection{
+									&Field{
 										Location: &Location{
 											Start:  22,
 											End:    24,
 											Source: &source,
 										},
 										Alias: nil,
-										Name: Name{
+										Name: &Name{
 											Location: &Location{
 												Start:  22,
 												End:    24,
@@ -302,18 +313,18 @@ func TestParse_ParseCreatesAst(T *testing.T) {
 											},
 											Value: "id",
 										},
-										Arguments:    []Argument{},
-										Directives:   []Directive{},
+										Arguments:    nil,
+										Directives:   nil,
 										SelectionSet: nil,
 									},
-									Field{
+									&Field{
 										Location: &Location{
 											Start:  30,
 											End:    34,
 											Source: &source,
 										},
 										Alias: nil,
-										Name: Name{
+										Name: &Name{
 											Location: &Location{
 												Start:  30,
 												End:    34,
@@ -321,8 +332,8 @@ func TestParse_ParseCreatesAst(T *testing.T) {
 											},
 											Value: "name",
 										},
-										Arguments:    []Argument{},
-										Directives:   []Directive{},
+										Arguments:    nil,
+										Directives:   nil,
 										SelectionSet: nil,
 									},
 								},
