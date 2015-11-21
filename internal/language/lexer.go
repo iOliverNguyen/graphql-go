@@ -284,8 +284,9 @@ func (l *Lexer) readDigits() {
 		if l.char != EOF {
 			c = string(l.char)
 		}
+
 		panic(SyntaxError(l.source, l.position,
-			fmt.Sprintf("Invalid number, expected digit but got: %s", c)))
+			fmt.Sprintf(`Invalid number, expected digit but got: "%s".`, c)))
 	}
 
 	l.next()
@@ -350,7 +351,6 @@ func (l *Lexer) readString() Token {
 	}
 
 	if l.char != '"' {
-		LOG.Printf("STRING %c %d", l.char, l.char)
 		panic(SyntaxError(l.source, l.position, "Unterminated string."))
 	}
 

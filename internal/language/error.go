@@ -4,11 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
-
-	"github.com/ng-vu/graphql-go/internal/debug"
 )
-
-var LOG = debug.New("language")
 
 type QLError struct {
 	Message   string
@@ -153,7 +149,7 @@ func getLocation(source Source, position int) SourceLocation {
 
 	for i, ch := range source.Body {
 		if i >= position {
-			column = position - startColumn
+			column = position - startColumn + 1
 			break
 		}
 

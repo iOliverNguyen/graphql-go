@@ -5,7 +5,11 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/ng-vu/graphql-go/internal/debug"
 )
+
+var LOG = debug.New("language")
 
 func deepEqual(T *testing.T, A, B interface{}) {
 	if !reflect.DeepEqual(A, B) {
