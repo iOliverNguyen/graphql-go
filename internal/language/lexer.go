@@ -193,6 +193,7 @@ func (l *Lexer) next() rune {
 	l.char = ch
 	l.position = l.nextPosition
 	l.nextPosition += size
+	// LOG.Println("Inside next() Pos: ", l.position, l.char, "Next: ", l.body[l.nextPosition])
 	return ch
 }
 

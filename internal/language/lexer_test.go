@@ -8,6 +8,16 @@ func lexOne(str string) Token {
 	return lexer.nextToken()
 }
 
+func TestLex_DisallowsUncommonControlCharacters(T *testing.T) {
+	expectPanic(T, func() {
+		lexOne(`\\u0007`)
+	}, `Syntax Error GraphQL (1:1) Invalid character "\\u0007"`)
+}
+
+func TestLex_AcceptsBOMHeader(T *testing.T) {
+	deepEqual(T, lexOne(`\uFEFF foo`), newToken(TOKEN_NAME, 2, 5, "foo"))
+}
+
 func TestLex_SkipsWhitespace(T *testing.T) {
 	deepEqual(T, lexOne(`
 
@@ -35,8 +45,8 @@ func TestLex_ErrorsRespectWhitespace(T *testing.T) {
 		"Syntax Error GraphQL (3:5) Unexpected character \"?\".\n"+
 			"\n"+
 			"2: \n"+
-			"3:     ?\n"+
-			"       ^\n"+
+			"3:    ?\n"+
+			"      ^\n"+
 			"4: \n")
 }
 

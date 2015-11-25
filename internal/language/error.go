@@ -105,6 +105,9 @@ func SyntaxError(source Source, position int, description string) QLError {
 		nil, "", &source, []int{position})
 }
 
+/**
+ * return high light
+ */
 func highlightSourceAtLocation(source Source, location SourceLocation) string {
 	line := location.Line
 	prevLineNum := strconv.Itoa(line - 1)
@@ -127,6 +130,9 @@ func highlightSourceAtLocation(source Source, location SourceLocation) string {
 	return result
 }
 
+/**
+ * add (leng - len(str)) ' ' before str
+ */
 func lpad(leng int, str string) string {
 	l := leng - len(str)
 	a := make([]byte, l)
@@ -141,26 +147,50 @@ type SourceLocation struct {
 	Column int
 }
 
+/**
+ * return line number and column number of error char
+ * position is position in source.body
+ */
 func getLocation(source Source, position int) SourceLocation {
+	// line := 1
+	// lastChar := ' '
+	// column := position + 1
+	// startColumn := 0
+
+	// for i, ch := range source.Body {
+	// 	if i >= position {
+	// 		column = position - startColumn
+	// 		break
+	// 	}
+
+	// 	switch ch {
+	// 	case '\r', '\n', '\u2028', '\u2029':
+	// 		if ch != '\n' || lastChar != '\r' {
+	// 			line++
+	// 		}
+	// 		startColumn = i
+	// 	}
+	// 	lastChar = ch
+	// }
+
 	line := 1
-	lastChar := ' '
-	column := position + 1
-	startColumn := 0
+	column := 1
 
 	for i, ch := range source.Body {
 		if i >= position {
-			column = position - startColumn
 			break
 		}
 
 		switch ch {
+		//if ch is newline, increase line, reset position
 		case '\r', '\n', '\u2028', '\u2029':
-			if ch != '\n' || lastChar != '\r' {
+			if ch == '\n' {
 				line++
+				column = 1
 			}
-			startColumn = i
+		default:
+			column++
 		}
-		lastChar = ch
 	}
 
 	return SourceLocation{
