@@ -45,8 +45,8 @@ func TestLex_ErrorsRespectWhitespace(T *testing.T) {
 		"Syntax Error GraphQL (3:5) Unexpected character \"?\".\n"+
 			"\n"+
 			"2: \n"+
-			"3:    ?\n"+
-			"      ^\n"+
+			"3:     ?\n"+
+			"       ^\n"+
 			"4: \n")
 }
 
