@@ -149,7 +149,7 @@ func getLocation(source Source, position int) SourceLocation {
 
 	for i, ch := range source.Body {
 		if i >= position {
-			column = position - startColumn + 1
+			column = position - startColumn
 			break
 		}
 
