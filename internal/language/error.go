@@ -183,11 +183,13 @@ func getLocation(source Source, position int) SourceLocation {
 
 		switch ch {
 		//if ch is newline, increase line, reset position
-		case '\r', '\n', '\u2028', '\u2029':
-			if ch == '\n' {
-				line++
-				column = 1
+		case '\r', '\n', '\u2028', '\u2029': //all cases: '\r\n', '\r', '\n', '\u2028', '\u2029'
+			nextCh := source.Body[i+1]
+			if ch == '\r' && nextCh == '\n' { //case '\r\n'
+				line--
 			}
+			line++
+			column = 1
 		default:
 			column++
 		}
