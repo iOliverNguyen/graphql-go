@@ -150,6 +150,7 @@ type SourceLocation struct {
 /**
  * return line number and column number of error char
  * position is position in source.body
+ * columns index start at 1
  */
 func getLocation(source Source, position int) SourceLocation {
 	// line := 1

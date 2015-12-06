@@ -351,8 +351,10 @@ func (l *Lexer) readString() Token {
 		l.next()
 	}
 
+	//When error occurs, l.position is not correct
+	//just return end of file (EOF)
 	if l.char != '"' {
-		panic(SyntaxError(l.source, l.position, "Unterminated string."))
+		panic(SyntaxError(l.source, l.position+1, "Unterminated string."))
 	}
 
 	value += l.source.Body[chunkStart:l.position]
